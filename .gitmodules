@@ -1,3 +1,4 @@
 [submodule "keops"]
 	path = keops
-	url = https://github.com/Giodiro/keops.git
+	url = git@github.com:fwilliams/keops.git
+	branch = falkon
