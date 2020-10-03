@@ -233,6 +233,18 @@ def to_c_contig(tensor: Optional[torch.Tensor],
         "unnecessary copy, either disable KeOps (passing `keops_active='no'`) or make "
         "the input tensors C-contiguous."
     )
+    if tensor is None:
+        return tensor
+
+    # tensors whose shape is of the form () are both F-contiguous and C-contiguous
+    if len(tensor.shape) == 0:
+        return tensor
+
+    # tensors whose shape is of the form (N,) and have unit stride are both F-contiguous and C-contiguous
+    is_1d_contig = len(tensor.shape) == 1 and tensor.stride(0) == 1
+    if is_1d_contig:
+        return tensor
+
     if tensor is not None and is_f_contig(tensor):
         if warn:
             warnings.warn(warning_text % name)
